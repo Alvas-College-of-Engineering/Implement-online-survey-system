@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::div})}">
+<body>
+<div class="row justify-content-center py-5">
+    <div class="col-md-10">
+        <div class="form-card">
+            <h1 class="form-title" th:text="${surveyId == null ? 'Create New Survey' : 'Edit Survey'}">Create New Survey</h1>
+            <p class="form-subtitle">Create surveys and collect responses professionally.</p>
+            
+            <form th:action="${surveyId == null ? '/admin/surveys' : '/admin/surveys/' + surveyId}" th:object="${surveyDto}" method="post">
+                <div class="mb-4">
+                    <label th:for="title" class="form-label text-secondary fw-medium mb-2">Survey Title</label>
+                    <input type="text" th:field="*{title}" class="form-control input-field" 
+                           placeholder="e.g. Customer Satisfaction 2024"
+                           th:classappend="${#fields.hasErrors('title')} ? 'is-invalid' : ''" required>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+                </div>
+                
+                <div class="mb-4">
+                    <label th:for="description" class="form-label text-secondary fw-medium mb-2">Description</label>
+                    <textarea th:field="*{description}" class="form-control textarea-field" rows="5" 
+                              placeholder="Tell your respondents what this survey is about..."></textarea>
+                </div>
+                
+                <div class="d-flex align-items-center mt-5">
+                    <button type="submit" class="create-btn me-3" 
+                            th:text="${surveyId == null ? 'Create Survey' : 'Update Survey'}">Create Survey</button>
+                    <a th:href="@{/admin/dashboard}" class="cancel-btn">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

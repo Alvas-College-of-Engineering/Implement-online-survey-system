@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::div})}">
+<body>
+<div class="container py-5">
+    <div class="mb-5">
+        <h1 class="form-title">Available Surveys</h1>
+        <p class="form-subtitle">Browse and participate in active surveys.</p>
+    </div>
+    
+    <div class="row row-cols-1 row-cols-md-3 g-4" th:if="${!#lists.isEmpty(surveys)}">
+        <div class="col" th:each="survey : ${surveys}">
+            <div class="card h-100 stat-card">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3" th:text="${survey.title}">Survey Title</h5>
+                    <p class="text-secondary small" th:text="${survey.description != null && #strings.length(survey.description) > 100 ? #strings.substring(survey.description,0,100) + '...' : survey.description}">Description</p>
+                </div>
+                <div class="p-4 pt-0">
+                    <a th:href="@{/surveys/{id}(id=${survey.id})}" class="btn-primary d-block text-center text-decoration-none">Take Survey</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Glassmorphism Empty State -->
+    <div th:if="${#lists.isEmpty(surveys)}" class="empty-state-card">
+        <div class="mb-4" style="font-size: 4rem; filter: drop-shadow(0 0 10px var(--accent));">🌌</div>
+        <h2>No surveys available</h2>
+        <p>We're currently preparing new surveys. Please check back soon!</p>
+    </div>
+</div>
+</body>
+</html>

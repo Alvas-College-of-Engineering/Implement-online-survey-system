@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::div})}">
+<body>
+<div class="container py-4">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-end mb-5">
+        <div>
+            <h1 class="form-title mb-1">Admin Dashboard</h1>
+            <p class="form-subtitle mb-0">Manage your surveys and analyze real-time results.</p>
+        </div>
+        <a th:href="@{/admin/surveys/new}" class="create-btn text-decoration-none">+ Create New Survey</a>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-label">Total Surveys</div>
+                <div class="stat-value" th:text="${#lists.size(surveys)}">0</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-label">Active Surveys</div>
+                <div class="stat-value" th:text="${#lists.size(surveys.?[status.name() == 'PUBLISHED'])}">0</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-label">Drafts</div>
+                <div class="stat-value" th:text="${#lists.size(surveys.?[status.name() == 'DRAFT'])}">0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="table-container">
+        <table class="premium-table">
+            <thead>
+                <tr>
+                    <th>Survey Title</th>
+                    <th>Status</th>
+                    <th>Created By</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="survey : ${surveys}">
+                    <td>
+                        <div class="fw-semibold text-primary" th:text="${survey.title}">Title</div>
+                        <small class="text-muted" th:text="${survey.description != null && #strings.length(survey.description) > 50 ? #strings.substring(survey.description,0,50) + '...' : survey.description}">Desc</small>
+                    </td>
+                    <td>
+                        <span class="badge-premium" 
+                              th:classappend="${survey.status.name() == 'PUBLISHED' ? 'badge-published' : 'badge-draft'}" 
+                              th:text="${survey.status}">STATUS</span>
+                    </td>
+                    <td th:text="${survey.owner.email}">Owner</td>
+                    <td class="text-end">
+                        <div class="d-flex justify-content-end gap-2">
+                            <a th:href="@{/admin/surveys/{id}/questions(id=${survey.id})}" class="btn btn-sm btn-link py-1" title="Questions">📝 Questions</a>
+                            <a th:href="@{/admin/surveys/{id}/results(id=${survey.id})}" class="btn btn-sm btn-link py-1" title="Results">📊 Results</a>
+                            <a th:href="@{/admin/surveys/{id}/edit(id=${survey.id})}" class="btn btn-sm btn-link py-1" title="Edit">⚙️</a>
+                            
+                            <form th:if="${survey.status.name() == 'DRAFT'}" th:action="@{/admin/surveys/{id}/publish(id=${survey.id})}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-link py-1 text-success" style="color: #22C55E !important;">🚀 Publish</button>
+                            </form>
+                            
+                            <form th:action="@{/admin/surveys/{id}/delete(id=${survey.id})}" method="post" class="d-inline" onsubmit="return confirm('Are you sure?')">
+                                <button type="submit" class="btn btn-sm btn-link py-1 text-danger" style="color: #EF4444 !important;">🗑️</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(surveys)}">
+                    <td colspan="4">
+                        <div class="empty-state">
+                            <div class="mb-3" style="font-size: 3rem;">📂</div>
+                            <div>No surveys found.</div>
+                            <small class="text-muted">Get started by creating your first professional survey.</small>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

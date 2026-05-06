@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::div})}">
+<body>
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Manage Questions</li>
+        </ol>
+    </nav>
+
+    <div class="mb-5">
+        <h1 class="form-title">Manage Questions</h1>
+        <p class="form-subtitle">For survey: <span th:text="${survey.title}" class="text-accent fw-bold" style="color: var(--accent);">Survey Title</span></p>
+    </div>
+
+    <div class="premium-card mb-5">
+        <div class="premium-card-header">
+            <h5>Existing Questions</h5>
+        </div>
+        <div class="p-0">
+            <table class="premium-table">
+                <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Question Text</th>
+                    <th>Options</th>
+                    <th class="text-end">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="q : ${questions}">
+                    <td>
+                        <span class="badge-premium badge-draft" th:text="${q.type}">TEXT</span>
+                    </td>
+                    <td class="text-primary fw-medium" th:text="${q.text}">Question text</td>
+                    <td>
+                        <small class="text-muted" th:text="${q.options != null ? q.options : '-'}">Options</small>
+                    </td>
+                    <td class="text-end">
+                        <form th:action="@{/admin/surveys/{surveyId}/questions/{questionId}/delete(surveyId=${survey.id}, questionId=${q.id})}" method="post" class="d-inline" onsubmit="return confirm('Delete this question?')">
+                            <button type="submit" class="btn btn-sm btn-link text-danger py-1" style="color: #EF4444 !important;">🗑️ Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(questions)}">
+                    <td colspan="4">
+                        <div class="empty-state py-5">
+                            <div class="mb-2" style="font-size: 2rem;">📝</div>
+                            <div>No questions added yet.</div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="premium-card">
+        <div class="premium-card-header">
+            <h5>Add New Question</h5>
+        </div>
+        <div class="card-body p-4 p-md-5">
+            <form th:action="@{/admin/surveys/{id}/questions(id=${survey.id})}" th:object="${questionDto}" method="post">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label text-secondary fw-medium mb-2">Question Type</label>
+                        <select th:field="*{type}" class="form-control select-field" required>
+                            <option value="TEXT">TEXT</option>
+                            <option value="RADIO">RADIO</option>
+                            <option value="CHECKBOX">CHECKBOX</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8 mb-4">
+                        <label class="form-label text-secondary fw-medium mb-2">Question Text</label>
+                        <input type="text" th:field="*{text}" class="form-control input-field" required placeholder="Enter your question here">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label text-secondary fw-medium mb-2">Options (for RADIO/CHECKBOX)</label>
+                    <input type="text" name="options" class="form-control input-field" placeholder="e.g. Yes, No, Maybe (Comma separated)">
+                    <p class="mt-2 small text-muted">Separate multiple options with commas.</p>
+                </div>
+                <div class="mt-4">
+                    <button type="submit" class="primary-btn">Add Question</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
