@@ -1,6 +1,7 @@
 package com.survey.service;
 
 import com.survey.dto.SurveyDto;
+import com.survey.exception.ResourceNotFoundException;
 import com.survey.model.Survey;
 import com.survey.model.User;
 import com.survey.model.enums.SurveyStatus;
@@ -30,7 +31,7 @@ public class SurveyService {
 
     public Survey updateSurvey(Long id, SurveyDto dto) {
         Survey survey = surveyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Survey not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Survey not found"));
         survey.setTitle(dto.getTitle());
         survey.setDescription(dto.getDescription());
         return surveyRepository.save(survey);
@@ -38,13 +39,13 @@ public class SurveyService {
 
     public void deleteSurvey(Long id) {
         Survey survey = surveyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Survey not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Survey not found"));
         surveyRepository.delete(survey);
     }
 
     public Survey publishSurvey(Long id) {
         Survey survey = surveyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Survey not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Survey not found"));
         survey.setStatus(SurveyStatus.PUBLISHED);
         return surveyRepository.save(survey);
     }
@@ -59,6 +60,6 @@ public class SurveyService {
 
     public Survey getSurveyById(Long id) {
         return surveyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Survey not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Survey not found"));
     }
 }

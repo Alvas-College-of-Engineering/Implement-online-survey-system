@@ -18,6 +18,11 @@ public class PublicSurveyController {
     private final QuestionService questionService;
     private final ResponseService responseService;
 
+    @GetMapping("/")
+    public String index() {
+        return "redirect:/surveys";
+    }
+
     @GetMapping("/surveys")
     public String listSurveys(Model model) {
         model.addAttribute("surveys", surveyService.getAllPublished());

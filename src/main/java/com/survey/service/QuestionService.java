@@ -3,6 +3,7 @@ package com.survey.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.survey.dto.QuestionDto;
+import com.survey.exception.ResourceNotFoundException;
 import com.survey.model.Question;
 import com.survey.model.Survey;
 import com.survey.repository.QuestionRepository;
@@ -24,7 +25,7 @@ public class QuestionService {
 
     public Question addQuestion(QuestionDto dto) {
         Survey survey = surveyRepository.findById(dto.getSurveyId())
-                .orElseThrow(() -> new RuntimeException("Survey not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Survey not found"));
 
         List<String> finalOptions = dto.getOptions();
         // If the form sent a single string with commas, split it
@@ -53,13 +54,13 @@ public class QuestionService {
 
     public void deleteQuestion(Long id) {
         Question question = questionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Question not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
         questionRepository.delete(question);
     }
 
     public List<Question> getQuestionsBySurvey(Long surveyId) {
         Survey survey = surveyRepository.findById(surveyId)
-                .orElseThrow(() -> new RuntimeException("Survey not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Survey not found"));
         return questionRepository.findBySurvey(survey);
     }
 }

@@ -27,6 +27,7 @@ com\survey\repository\UserRepository.class
 com\survey\model\enums\Role.class
 com\survey\model\enums\SurveyStatus.class
 com\survey\dto\QuestionDto.class
+com\survey\exception\ResourceNotFoundException.class
 com\survey\SurveySystemApplication.class
 com\survey\dto\ResponseSubmitDto.class
 com\survey\dto\UserRegisterDto.class

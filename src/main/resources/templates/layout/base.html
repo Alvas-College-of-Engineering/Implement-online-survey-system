@@ -42,7 +42,10 @@
                     <a class="nav-link" th:href="@{/surveys}">Surveys</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                    <a class="nav-link" th:href="@{/admin/dashboard}">Dashboard</a>
+                    <a class="nav-link" th:href="@{/admin/dashboard}">Admin Dashboard</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('USER')">
+                    <a class="nav-link" th:href="@{/user/dashboard}">My Profile</a>
                 </li>
             </ul>
             <ul class="navbar-nav align-items-center">

@@ -10,7 +10,7 @@ import com.survey.security.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,11 +40,11 @@ public class AdminSurveyController {
     @PostMapping("/surveys")
     public String createSurvey(@Valid @ModelAttribute("surveyDto") SurveyDto dto,
                                BindingResult result,
-                               Authentication auth) {
+                               @AuthenticationPrincipal CustomUserDetails userDetails) {
         if (result.hasErrors()) {
             return "admin/survey-form";
         }
-        User user = ((CustomUserDetails) auth.getPrincipal()).getUser();
+        User user = userDetails.getUser();
         surveyService.createSurvey(dto, user);
         return "redirect:/admin/dashboard";
     }

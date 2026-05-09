@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.survey.dto.ResponseSubmitDto;
 import com.survey.dto.SurveyResultDto;
+import com.survey.exception.ResourceNotFoundException;
 import com.survey.model.Question;
 import com.survey.model.Response;
 import com.survey.model.Survey;
@@ -31,7 +32,7 @@ public class ResponseService {
 
     public Response submitResponse(ResponseSubmitDto dto, String ip) {
         Survey survey = surveyRepository.findById(dto.getSurveyId())
-                .orElseThrow(() -> new RuntimeException("Survey not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Survey not found"));
 
         String answersJson;
         try {
@@ -51,7 +52,7 @@ public class ResponseService {
 
     public SurveyResultDto getResultsBySurvey(Long surveyId) {
         Survey survey = surveyRepository.findById(surveyId)
-                .orElseThrow(() -> new RuntimeException("Survey not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Survey not found"));
 
         List<Response> responses = responseRepository.findBySurvey(survey);
         List<Question> questions = questionRepository.findBySurvey(survey);
