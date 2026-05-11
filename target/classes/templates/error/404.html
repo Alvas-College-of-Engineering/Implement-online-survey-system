@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::div})}">
+<body>
+<div class="container">
+    <div class="notfound-card">
+        <div class="notfound-code">404</div>
+        <h1 class="notfound-title">Page Not Found</h1>
+        <p class="notfound-text">The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
+        <a th:href="@{/}" class="btn-primary text-decoration-none d-inline-block">Back to Home</a>
+    </div>
+</div>
+</body>
+</html>

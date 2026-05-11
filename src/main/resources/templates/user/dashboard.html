@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::div})}">
+<body>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="premium-card">
+                <div class="premium-card-header text-center">
+                    <h3 class="mb-0 text-white">My Profile</h3>
+                </div>
+                <div class="p-4 p-md-5">
+                    <div class="mb-4 text-center">
+                        <div style="font-size: 4rem;">👤</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Email Address</label>
+                        <div class="p-3 border rounded" style="background-color: var(--input-bg); border-color: var(--border) !important;">
+                            <span class="text-white fw-bold" th:text="${user.email}">user@example.com</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label text-muted">Account Role</label>
+                        <div class="p-3 border rounded" style="background-color: var(--input-bg); border-color: var(--border) !important;">
+                            <span class="badge-premium badge-published" th:text="${user.role}">USER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-5">
+                        <a th:href="@{/surveys}" class="submit-btn w-100 d-inline-block text-decoration-none">Explore Surveys</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

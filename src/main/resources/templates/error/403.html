@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::div})}">
+<body>
+<div class="container py-5">
+    <div class="empty-state-card mt-5">
+        <div class="mb-4" style="font-size: 4rem; filter: drop-shadow(0 0 10px var(--accent));">🛡️</div>
+        <h1 class="fw-bold mb-3">Restricted Area</h1>
+        <p class="mb-4">It looks like you don't have the necessary permissions (Admin rights) to access this specific part of the system.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a th:href="@{/surveys}" class="btn-primary text-decoration-none">Back to Surveys</a>
+            <a th:href="@{/login}" class="btn-secondary text-decoration-none" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.8rem 2rem; border-radius: 12px; color: white;">Switch Account</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

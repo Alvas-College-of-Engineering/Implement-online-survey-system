@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::div})}">
+<body>
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-4">Register</h2>
+                
+                <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                <form th:action="@{/register}" th:object="${userDto}" method="post">
+                    <div class="mb-3">
+                        <label th:for="email" class="form-label">Email address</label>
+                        <input type="email" th:field="*{email}" class="form-control" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''" required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label th:for="password" class="form-label">Password</label>
+                        <input type="password" th:field="*{password}" class="form-control" th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''" required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                        <small class="form-text text-muted">Minimum 6 characters.</small>
+                    </div>
+                    <div class="mb-3">
+                        <label th:for="role" class="form-label">Role</label>
+                        <select th:field="*{role}" class="form-control" th:classappend="${#fields.hasErrors('role')} ? 'is-invalid' : ''" required>
+                            <option value="PUBLIC">PUBLIC (Respondent)</option>
+                            <option value="ADMIN">ADMIN (Creator)</option>
+                        </select>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">Create Account</button>
+                    </div>
+                </form>
+                
+                <hr>
+                <div class="text-center">
+                    <p class="mb-0">Already have an account? <a th:href="@{/login}">Login here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

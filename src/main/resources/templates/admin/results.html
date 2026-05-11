@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::div})}">
+<body>
+<div class="container py-4">
+    <!-- Add Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Survey Results</li>
+        </ol>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-end mb-5">
+        <div>
+            <h1 class="form-title mb-1">Survey Results</h1>
+            <p class="form-subtitle mb-0">Analysis for: <span th:text="${survey.title}" class="text-accent fw-bold" style="color: var(--accent);">Survey Title</span></p>
+        </div>
+        <a th:href="@{/admin/dashboard}" class="cancel-btn">Back to Dashboard</a>
+    </div>
+
+    <!-- Stats Card -->
+    <div class="row mb-5">
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-label">Total Responses</div>
+                <div class="stat-value" th:text="${result.totalResponses}">0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Questions Breakdown -->
+    <div th:each="q : ${questions}" class="premium-card mb-4">
+        <div class="premium-card-header">
+            <div class="d-flex align-items-center">
+                <span class="badge-premium badge-draft me-3" th:text="${q.type}">TYPE</span>
+                <h5 class="mb-0 text-white" th:text="${q.text}">Question text</h5>
+            </div>
+        </div>
+        <div class="p-4 p-md-5">
+            <div th:if="${result.answerBreakdown.get(q.id) != null && !result.answerBreakdown.get(q.id).isEmpty()}" class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="table-container">
+                        <table class="premium-table">
+                            <thead>
+                            <tr>
+                                <th>Answer Option</th>
+                                <th style="width: 120px;" class="text-end">Count</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="entry : ${result.answerBreakdown.get(q.id)}">
+                                <td class="text-primary" th:text="${entry.key}">Answer</td>
+                                <td class="text-end fw-bold" th:text="${entry.value}">0</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Chart Container -->
+                <div class="col-lg-6" th:if="${q.type.name() != 'TEXT'}">
+                    <div style="max-height: 300px; position: relative;">
+                        <canvas th:id="'chart-' + ${q.id}"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div th:unless="${result.answerBreakdown.get(q.id) != null && !result.answerBreakdown.get(q.id).isEmpty()}" class="py-4">
+                <p class="text-muted mb-0"><i>No responses recorded for this question yet.</i></p>
+            </div>
+        </div>
+        
+        <!-- Chart Script -->
+        <script th:if="${result.answerBreakdown.get(q.id) != null && !result.answerBreakdown.get(q.id).isEmpty() && q.type.name() != 'TEXT'}" th:inline="javascript">
+            /*<![CDATA[*/
+            (function() {
+                const ctx = document.getElementById(/*[[ 'chart-' + ${q.id} ]]*/).getContext('2d');
+                const dataMap = /*[[ ${result.answerBreakdown.get(q.id)} ]]*/ {};
+                const labels = Object.keys(dataMap);
+                const values = Object.values(dataMap);
+                const type = /*[[ ${q.type.name()} ]]*/ 'RADIO';
+
+                new Chart(ctx, {
+                    type: type === 'CHECKBOX' ? 'bar' : 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Responses',
+                            data: values,
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.7)',
+                                'rgba(255, 99, 132, 0.7)',
+                                'rgba(255, 206, 86, 0.7)',
+                                'rgba(75, 192, 192, 0.7)',
+                                'rgba(153, 102, 255, 0.7)',
+                                'rgba(255, 159, 64, 0.7)'
+                            ],
+                            borderColor: '#ffffff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { color: '#ffffff' }
+                            }
+                        },
+                        scales: type === 'CHECKBOX' ? {
+                            y: { beginAtZero: true, ticks: { color: '#ffffff' } },
+                            x: { ticks: { color: '#ffffff' } }
+                        } : {}
+                    }
+                });
+            })();
+            /*]]>*/
+        </script>
+    </div>
+
+    <div th:if="${#lists.isEmpty(questions)}" class="empty-state-card">
+        <div class="mb-4" style="font-size: 4rem;">📊</div>
+        <h2>No questions defined</h2>
+        <p>This survey doesn't have any questions to analyze yet.</p>
+    </div>
+</div>
+</body>
+</html>
